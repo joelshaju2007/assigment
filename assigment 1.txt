@@ -1,0 +1,132 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX 50                 /* maximum number of students */
+
+int main(void)
+{
+    int roll[MAX];             /* roll numbers */
+    char name[MAX][30];        /* student names */
+    float st1[MAX];            /* Series Test 1 marks (out of 50) */
+    float st2[MAX];            /* Series Test 2 marks (out of 50) */
+    float internal[MAX];       /* internal marks (out of 50) */
+
+    int count = 0;             /* number of students stored */
+    int choice, i, r, found;
+    float m1, m2;
+
+    do {
+        /* ---- display menu ---- */
+
+        printf("\n===== INTERNAL MARKS CALCULATOR =====\n");
+        printf("1. Add student\n");
+        printf("2. View all students\n");
+        printf("3. Search student by roll number\n");
+        printf("4. Exit\n");
+        printf("Enter your choice: ");
+
+        scanf("%d", &choice);
+
+        switch (choice) {
+
+            case 1:             /* ---- add student ---- */
+
+                if (count >= MAX) {
+                    printf("List is full!\n");
+                    break;
+                }
+
+                printf("Enter roll number: ");
+                scanf("%d", &r);
+
+                found = 0;
+
+                for (i = 0; i < count; i++) {   /* duplicate check */
+                    if (roll[i] == r) {
+                        found = 1;
+                    }
+                }
+
+                if (found == 1) {
+                    printf("Roll number already exists!\n");
+                    break;
+                }
+
+                printf("Enter name: ");
+                scanf(" %29[^\n]", name[count]);
+
+                printf("Enter Series Test 1 marks (0-50): ");
+                scanf("%f", &m1);
+
+                printf("Enter Series Test 2 marks (0-50): ");
+                scanf("%f", &m2);
+
+                if (m1 < 0 || m1 > 50 || m2 < 0 || m2 > 50) {
+                    printf("Invalid marks! Student not added.\n");
+                    break;
+                }
+
+                roll[count] = r;
+                st1[count] = m1;
+                st2[count] = m2;
+                internal[count] = (m1 + m2) / 2;  /* average of 2 tests */
+
+                count++;
+
+                printf("Student added successfully.\n");
+                break;
+
+            case 2:             /* ---- view all students ---- */
+
+                if (count == 0) {
+                    printf("No records found.\n");
+                    break;
+                }
+
+                printf("\nRoll  Name                ST1    ST2   Internal\n");
+
+                for (i = 0; i < count; i++) {
+                    printf("%-5d %-20s %5.1f  %5.1f  %6.1f\n",
+                           roll[i], name[i], st1[i], st2[i], internal[i]);
+                }
+
+                break;
+
+            case 3:             /* ---- search by roll number ---- */
+
+                printf("Enter roll number to search: ");
+                scanf("%d", &r);
+
+                found = 0;
+
+                for (i = 0; i < count; i++) {
+                    if (roll[i] == r) {
+
+                        printf("Name: %s\n", name[i]);
+                        printf("Series Test 1: %.1f\n", st1[i]);
+                        printf("Series Test 2: %.1f\n", st2[i]);
+                        printf("Internal marks: %.1f\n", internal[i]);
+
+                        found = 1;
+                        break;
+                    }
+                }
+
+                if (found == 0) {
+                    printf("Student not found.\n");
+                }
+
+                break;
+
+            case 4:
+                printf("Thank you!\n");
+                break;
+
+            default:
+                printf("Invalid choice! Try again.\n");
+        }
+
+    } while (choice != 4);      /* repeat until Exit */
+
+    return 0;
+}
